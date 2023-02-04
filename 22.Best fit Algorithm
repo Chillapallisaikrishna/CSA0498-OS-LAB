@@ -1,0 +1,71 @@
+    #include<stdio.h> 
+
+#define MAX 100 
+
+int fragments[MAX]; 
+int block_size[MAX]; 
+int m, n; 
+
+void input(); 
+void bestFit(); 
+
+int main() 
+{ 
+	input(); 
+	bestFit(); 
+	return 0; 
+} 
+
+void input() 
+{ 
+	printf("Enter the number of blocks: "); 
+	scanf("%d", &n); 
+	printf("Enter the size of each block: "); 
+	for (int i=0; i<n; i++) 
+		scanf("%d", &block_size[i]); 
+	printf("Enter the number of processes: "); 
+	scanf("%d", &m); 
+	printf("Enter the size of each process: "); 
+	for (int i=0; i<m; i++) 
+	{ 
+		scanf("%d", &fragments[i]); 
+	} 
+} 
+
+void bestFit() 
+{ 
+	int allocation[m]; 
+
+	for (int i=0; i<m; i++) 
+	{ 
+		int bestIdx = -1; 
+		for (int j=0; j<n; j++) 
+		{ 
+			if (block_size[j] >= fragments[i]) 
+			{ 
+				if (bestIdx == -1) 
+					bestIdx = j; 
+				else if (block_size[bestIdx] > block_size[j]) 
+					bestIdx = j; 
+			} 
+		} 
+
+		if (bestIdx != -1) 
+		{ 
+			allocation[i] = bestIdx; 
+
+			block_size[bestIdx] -= fragments[i]; 
+		} 
+		else
+		{ 
+			printf("\nNot enough memory to allocate process %d\n", i + 1); 
+			break; 
+		} 
+	} 
+
+	printf("\nProcess No.\tProcess Size\tBlock no.\n"); 
+	for (int i = 0; i < m; i++) 
+	{ 
+		printf("%d\t\t%d\t\t%d\n", i + 1, fragments[i], allocation[i] + 1); 
+	} 
+}
