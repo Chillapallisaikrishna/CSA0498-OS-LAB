@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    FILE *fp;
+    char filename[] = "SYSTEM CALL.cpp";
+    char data[] = "This is some data to be written to the file.";
+    fp = fopen(filename, "w");
+    if (fp == NULL) {
+        printf("Could not open file for writing\n");
+        exit(EXIT_FAILURE);
+    }
+    fprintf(fp, "%s", data);
+    printf("Data written to file successfully\n");
+    fclose(fp);
+    fp = fopen(filename, "r");
+    if (fp == NULL) {
+        printf("Could not open file for reading\n");
+        exit(EXIT_FAILURE);
+    }
+    char readData[100];
+    fgets(readData, 100, fp);
+    printf("Data read from file: %s\n", readData);
+    fclose(fp);
+
+    return 0;
+}
