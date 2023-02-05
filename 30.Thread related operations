@@ -1,0 +1,55 @@
+#include <pthread.h>
+#include <stdio.h>
+#include <unistd.h>
+
+void *print_message_function(void *ptr)
+{
+    char *message;
+    message = (char *) ptr;
+    printf("%s\n", message);
+    pthread_exit(NULL);
+}
+
+int main()
+{
+    pthread_t thread1, thread2;
+    const char *message1 = "Thread 1 Created";
+    int result = pthread_create(&thread1, NULL, print_message_function, (void *) message1);
+    if (result != 0)
+    {
+        perror("Thread 1 creation failed");
+        return 1;
+    }
+    printf("Waiting for thread 1 to finish...\n");
+    result = pthread_join(thread1, NULL);
+    if (result != 0)
+    {
+        perror("Thread 1 join failed");
+        return 1;
+    }
+    printf("Thread 1 joined\n");
+    const char *message2 = "Thread 2 Created";
+    result = pthread_create(&thread2, NULL, print_message_function, (void *) message2);
+    if (result != 0)
+    {
+        perror("Thread 2 creation failed");
+        return 1;
+    }
+    printf("Waiting for thread 2 to finish...\n");
+    result = pthread_join(thread2, NULL);
+    if (result != 0)
+    {
+        perror("Thread 2 join failed");
+        return 1;
+    }
+    printf("Thread 2 joined\n");
+    if (pthread_equal(thread1, thread2))
+    {
+        printf("Threads are equal\n");
+    }
+    else
+    {
+        printf("Threads are not equal\n");
+    }
+    return 0;
+}
